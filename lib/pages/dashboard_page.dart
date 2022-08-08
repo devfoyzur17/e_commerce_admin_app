@@ -2,12 +2,14 @@ import 'package:e_commerce_admin_app/auth/auth_service.dart';
 import 'package:e_commerce_admin_app/models/dashboard_item_model.dart';
 import 'package:e_commerce_admin_app/pages/category_page.dart';
 import 'package:e_commerce_admin_app/pages/launcher_page.dart';
+import 'package:e_commerce_admin_app/pages/new_product_page.dart';
 import 'package:e_commerce_admin_app/pages/order_page.dart';
 import 'package:e_commerce_admin_app/pages/products_page.dart';
 import 'package:e_commerce_admin_app/pages/report_page.dart';
 import 'package:e_commerce_admin_app/pages/setting_page.dart';
 import 'package:e_commerce_admin_app/pages/user_page.dart';
 import 'package:e_commerce_admin_app/widgets/dashboard_item_view.dart';
+import 'package:e_commerce_admin_app/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -19,14 +21,9 @@ class DashboardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dashboard"),
-        actions: [
-          IconButton(onPressed: (){
-            AuthService.logout();
-            Navigator.pushReplacementNamed(context, LauncherPage.routeName);
-
-    }, icon: Icon(Icons.logout)),
-        ],
+     
       ),
+      drawer: const MainDrawer(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: GridView.builder(
@@ -44,7 +41,11 @@ class DashboardPage extends StatelessWidget {
 
             })),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.pushNamed(context, NewProductPage.routeName);
+      },child:const Icon(Icons.add)),
     );
+    
   }
 
   String navigator(String value) {

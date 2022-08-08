@@ -23,23 +23,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<int, Color> pokeballRedSwatch = {
-      50: const Color.fromARGB(255, 24, 1, 105),
-      100: const Color.fromARGB(255, 6, 150, 59),
-      200: const Color.fromARGB(255, 6, 150, 59),
-      300: const Color.fromARGB(255, 6, 150, 59),
-      400: const Color.fromARGB(255, 6, 150, 59),
-      500: const Color.fromARGB(255, 6, 150, 59),
-      600: const Color.fromARGB(255, 6, 150, 59),
-      700: const Color.fromARGB(255, 6, 150, 59),
-      800: const Color.fromARGB(255, 6, 150, 59),
-      900: const Color.fromARGB(255, 6, 150, 59),
+      50: const Color.fromARGB(255, 17, 156, 105),
+      100: const Color.fromARGB(255, 17, 156, 105),
+      200: const Color.fromARGB(255, 17, 156, 105),
+      300: const Color.fromARGB(255, 17, 156, 105),
+      400: const Color.fromARGB(255, 17, 156, 105),
+      500: const Color.fromARGB(255, 17, 156, 105),
+      600: const Color.fromARGB(255, 17, 156, 105),
+      700: const Color.fromARGB(255, 17, 156, 105),
+      800: const Color.fromARGB(255, 17, 156, 105),
+      900: const Color.fromARGB(255, 17, 156, 105),
     };
-    MaterialColor appColor = MaterialColor(0xffEE403E, pokeballRedSwatch);
+    MaterialColor appColor = MaterialColor(0xff119c69, pokeballRedSwatch);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: appColor,
+        primarySwatch: appColor, 
       ),
       initialRoute: LauncherPage.routeName,
       routes: {

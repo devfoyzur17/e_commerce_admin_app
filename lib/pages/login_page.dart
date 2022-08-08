@@ -54,8 +54,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   Image.asset(
                     "assets/images/person.png",
-                    height: 120,
-                    width: 120,
+                    height: 100,
+                    width: 100,
                     fit: BoxFit.fitHeight,
                   ),
                   SizedBox(
