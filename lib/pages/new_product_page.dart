@@ -136,8 +136,9 @@ class _NewProductPageState extends State<NewProductPage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: productNameController,
-                style:   TextStyle(
-                 color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color(0xffe6e6e6),
@@ -169,7 +170,8 @@ class _NewProductPageState extends State<NewProductPage> {
               child: TextFormField(
                 controller: productSalePriceController,
                 style: TextStyle(
-                 color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color(0xffe6e6e6),
@@ -201,7 +203,8 @@ class _NewProductPageState extends State<NewProductPage> {
               child: TextFormField(
                 controller: productPurchasePriceController,
                 style: TextStyle(
-                 color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color(0xffe6e6e6),
@@ -232,7 +235,8 @@ class _NewProductPageState extends State<NewProductPage> {
               child: TextFormField(
                 controller: productQuantityController,
                 style: TextStyle(
-                 color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color(0xffe6e6e6),
@@ -256,14 +260,15 @@ class _NewProductPageState extends State<NewProductPage> {
                 },
               ),
             ),
-// todo Product Description Textfield section
+          //todo Product Description Textfield section
 
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: productDescriptionController,
                 style: TextStyle(
-                 color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: const Color(0xffe6e6e6),
@@ -323,9 +328,7 @@ class _NewProductPageState extends State<NewProductPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Consumer<ProductProvider>(
-                builder: (context, provider,_)=>
-
-                 ListTile(
+                builder: (context, provider, _) => ListTile(
                   tileColor: Color(0xffe6e6e6),
                   leading: Text(
                     "Select category:",
@@ -336,52 +339,53 @@ class _NewProductPageState extends State<NewProductPage> {
                         fontSize: 16),
                   ),
                   trailing: DropdownButton(
-                  borderRadius: BorderRadius.circular(20),
-                  underline: Text(""),
-                  dropdownColor: Colors.white,
-                  value: bookCategory,
-                  icon: Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: const Icon(Icons.keyboard_arrow_down,color: Colors.red,),
+                    hint: Text("No category selected",style: TextStyle(color: Colors.grey),),
+
+                    borderRadius: BorderRadius.circular(20),
+                    underline: Text(""),
+                    dropdownColor: Colors.white,
+                    value: bookCategory,
+                    icon: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: const Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.red,
+                      ),
+                    ),
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w500),
+                    items: provider.categorylist.map((items) {
+                      return DropdownMenuItem(
+                        value: items.catName,
+                        child: Center(child: Text(items.catName.toString())),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        bookCategory = newValue.toString();
+                      });
+                    },
                   ),
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
-                  items: provider.categorylist.map(( items) {
-                    return DropdownMenuItem(
-                      value: items.catName,
-                      child: Center(child: Text(items.catName.toString())),
-                    );
-                  }).toList(),
-                  onChanged: ( newValue) {
-                    setState(() {
-                      bookCategory = newValue.toString();
-                    });
-                  },
-                ),
                 ),
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
 
-             ElevatedButton(
-                    onPressed: _addProduct,
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Add Product",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )),
-
-      
-
-            
-        
-         
+            ElevatedButton(
+                onPressed: _addProduct,
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)))),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Add Product",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                )),
           ],
         ),
       ),
@@ -411,6 +415,5 @@ class _NewProductPageState extends State<NewProductPage> {
     }
   }
 
-  void _addProduct() {
-  }
+  void _addProduct() {}
 }
