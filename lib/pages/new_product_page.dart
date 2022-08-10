@@ -2,6 +2,10 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_admin_app/models/date_model.dart';
+import 'package:e_commerce_admin_app/models/product_model.dart';
+import 'package:e_commerce_admin_app/models/purchase_model.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,8 +41,8 @@ class _NewProductPageState extends State<NewProductPage> {
 
   String? _purchaseDate;
 
-  String? bookCategory;
-  String? imagePatch;
+  String? _productCategory;
+  String? _imageUrl;
 
   ImageSource source = ImageSource.camera;
 
@@ -49,344 +53,354 @@ class _NewProductPageState extends State<NewProductPage> {
         title: const Text("New Product"),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Stack(
-                // alignment: Alignment.bottomRight,
-                children: [
-                  Center(
-                    child: imagePatch == null
-                        ? Image.asset(
-                            "assets/images/photos.png",
-                            height: 100,
-                            width: 100,
-                            alignment: Alignment.center,
-                            fit: BoxFit.cover,
-                          )
-                        : Image.file(
-                            File(
-                              imagePatch!,
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(
+                  // alignment: Alignment.bottomRight,
+                  children: [
+                    Center(
+                      child: _imageUrl == null
+                          ? Image.asset(
+                              "assets/images/photos.png",
+                              height: 100,
+                              width: 100,
+                              alignment: Alignment.center,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              _imageUrl!,
+                              height: 100,
+                              width: 100,
+                              alignment: Alignment.center,
+                              fit: BoxFit.cover,
                             ),
-                            height: 100,
-                            width: 100,
-                            alignment: Alignment.center,
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  Positioned(
-                      bottom: -5,
-                      right: MediaQuery.of(context).size.width / 2 - 80,
-                      child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                      elevation: 10,
-                                      actions: [
-                                        ListTile(
-                                          onTap: () {
-                                            source = ImageSource.camera;
-                                            _getImage();
-                                            Navigator.of(context).pop();
-                                          },
-                                          title: Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: Colors.deepOrange,
+                    ),
+                    Positioned(
+                        bottom: -5,
+                        right: MediaQuery.of(context).size.width / 2 - 80,
+                        child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                        elevation: 10,
+                                        actions: [
+                                          ListTile(
+                                            onTap: () {
+                                              source = ImageSource.camera;
+                                              _getImage();
+                                              Navigator.of(context).pop();
+                                            },
+                                            title: Icon(
+                                              Icons.camera_alt_outlined,
+                                              color: Colors.deepOrange,
+                                            ),
+                                            subtitle: Text(
+                                              "Image from camera",
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
-                                          subtitle: Text(
-                                            "Image from camera",
-                                            textAlign: TextAlign.center,
+                                          Divider(),
+                                          ListTile(
+                                            onTap: () {
+                                              source = ImageSource.gallery;
+                                              _getImage();
+                                              Navigator.of(context).pop();
+                                            },
+                                            title: Icon(
+                                              Icons.photo_library_outlined,
+                                              color: Colors.deepOrange,
+                                            ),
+                                            subtitle: Text(
+                                              "Image from Gallery",
+                                              textAlign: TextAlign.center,
+                                            ),
                                           ),
-                                        ),
-                                        Divider(),
-                                        ListTile(
-                                          onTap: () {
-                                            source = ImageSource.gallery;
-                                            _getImage();
-                                            Navigator.of(context).pop();
-                                          },
-                                          title: Icon(
-                                            Icons.photo_library_outlined,
-                                            color: Colors.deepOrange,
-                                          ),
-                                          subtitle: Text(
-                                            "Image from Gallery",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ],
-                                    ));
-                          },
-                          icon: Icon(
-                            Icons.add_a_photo,
-                            color: Colors.black87,
-                            size: 35,
-                          )))
-                ],
+                                        ],
+                                      ));
+                            },
+                            icon: Icon(
+                              Icons.add_a_photo,
+                              color: Colors.black87,
+                              size: 35,
+                            )))
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-
-            // todo Product Name Textfield section
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: productNameController,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffe6e6e6),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    focusColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.card_giftcard,
-                    ),
-                    hintText: "Enter the product name",
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.normal),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field must not be empty';
-                  } else {
-                    return null;
-                  }
-                },
+              SizedBox(
+                height: 20,
               ),
-            ),
 
-            // todo Product Sale Price Textfield section
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: productSalePriceController,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffe6e6e6),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    focusColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.monetization_on_outlined,
-                    ),
-                    hintText: "Enter the product sale price",
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.normal),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field must not be empty';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
-
-            // todo Product Purchase Price Textfield section
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: productPurchasePriceController,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffe6e6e6),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    focusColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.monetization_on,
-                    ),
-                    hintText: "Enter the product purchase price",
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.normal),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field must not be empty';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
-            // todo Product Quantity Textfield section
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: productQuantityController,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffe6e6e6),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    focusColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.clean_hands_outlined,
-                    ),
-                    hintText: "Enter the product quantity",
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.normal),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field must not be empty';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
-          //todo Product Description Textfield section
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: productDescriptionController,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500),
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xffe6e6e6),
-                    contentPadding: const EdgeInsets.only(left: 10),
-                    focusColor: Colors.white,
-                    prefixIcon: const Icon(
-                      Icons.description,
-                    ),
-                    hintText: "Enter the product description",
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.normal),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(20))),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'This field must not be empty';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-            ),
-
-            //todo Purchase Date Section
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                tileColor: Color(0xffe6e6e6),
-                leading: Text(
-                  "Purchase Date:",
+              // todo Product Name Textfield section
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: productNameController,
                   style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffe6e6e6),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusColor: Colors.white,
+                      prefixIcon: const Icon(
+                        Icons.card_giftcard,
+                      ),
+                      hintText: "Enter the product name",
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.normal),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field must not be empty';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
-                title: Center(
-                  child: Text(
-                    _purchaseDate == null
-                        ? "No date choisen!"
-                        : _purchaseDate.toString(),
-                    style: TextStyle(
-                        color: _purchaseDate == null
-                            ? Colors.grey
-                            : Theme.of(context).primaryColor),
-                  ),
-                ),
-                trailing: IconButton(
-                    onPressed: _showPurchaseDatePicker,
-                    icon: Icon(
-                      Icons.add,
-                      color: Colors.red,
-                    )),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Consumer<ProductProvider>(
-                builder: (context, provider, _) => ListTile(
+              // todo Product Sale Price Textfield section
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: productSalePriceController,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffe6e6e6),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusColor: Colors.white,
+                      prefixIcon: const Icon(
+                        Icons.monetization_on_outlined,
+                      ),
+                      hintText: "Enter the product sale price",
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.normal),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field must not be empty';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+
+              // todo Product Purchase Price Textfield section
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: productPurchasePriceController,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffe6e6e6),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusColor: Colors.white,
+                      prefixIcon: const Icon(
+                        Icons.monetization_on,
+                      ),
+                      hintText: "Enter the product purchase price",
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.normal),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field must not be empty';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              // todo Product Quantity Textfield section
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: productQuantityController,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffe6e6e6),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusColor: Colors.white,
+                      prefixIcon: const Icon(
+                        Icons.clean_hands_outlined,
+                      ),
+                      hintText: "Enter the product quantity",
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.normal),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field must not be empty';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+              //todo Product Description Textfield section
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  controller: productDescriptionController,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w500),
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xffe6e6e6),
+                      contentPadding: const EdgeInsets.only(left: 10),
+                      focusColor: Colors.white,
+                      prefixIcon: const Icon(
+                        Icons.description,
+                      ),
+                      hintText: "Enter the product description",
+                      hintStyle: TextStyle(
+                          color: Colors.grey, fontWeight: FontWeight.normal),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(20))),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'This field must not be empty';
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+              ),
+
+              //todo Purchase Date Section
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
                   tileColor: Color(0xffe6e6e6),
                   leading: Text(
-                    "Select category:",
-                    textAlign: TextAlign.center,
+                    "Purchase Date:",
                     style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16),
-                  ),
-                  trailing: DropdownButton(
-                    hint: Text("No category selected",style: TextStyle(color: Colors.grey),),
-
-                    borderRadius: BorderRadius.circular(20),
-                    underline: Text(""),
-                    dropdownColor: Colors.white,
-                    value: bookCategory,
-                    icon: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: const Icon(
-                        Icons.keyboard_arrow_down,
-                        color: Colors.red,
-                      ),
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                     ),
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w500),
-                    items: provider.categorylist.map((items) {
-                      return DropdownMenuItem(
-                        value: items.catName,
-                        child: Center(child: Text(items.catName.toString())),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        bookCategory = newValue.toString();
-                      });
-                    },
+                  ),
+                  title: Center(
+                    child: Text(
+                      _purchaseDate == null
+                          ? "No date choisen!"
+                          : _purchaseDate.toString(),
+                      style: TextStyle(
+                          color: _purchaseDate == null
+                              ? Colors.grey
+                              : Theme.of(context).primaryColor),
+                    ),
+                  ),
+                  trailing: IconButton(
+                      onPressed: _showPurchaseDatePicker,
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.red,
+                      )),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Consumer<ProductProvider>(
+                  builder: (context, provider, _) => ListTile(
+                    tileColor: Color(0xffe6e6e6),
+                    leading: Text(
+                      "Select category:",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16),
+                    ),
+                    trailing: DropdownButton(
+                      hint: Text(
+                        "No category selected",
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      underline: Container(),
+                      borderRadius: BorderRadius.circular(20),
+                      // validator: (value){
+                      //     if(value == null || value.toString().isEmpty){
+                      //       return "Please select a category!";
+                      //     }
+                      //     return null;
+                      // },
+                      dropdownColor: Colors.white,
+                      value: _productCategory,
+                      icon: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: const Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.red,
+                        ),
+                      ),
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w500),
+                      items: provider.categorylist.map((items) {
+                        return DropdownMenuItem(
+                          value: items.catName,
+                          child: Center(child: Text(items.catName.toString())),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          _productCategory = newValue.toString();
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
+              SizedBox(
+                height: 20,
+              ),
 
-            ElevatedButton(
-                onPressed: _addProduct,
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)))),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Add Product",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                )),
-          ],
+              ElevatedButton(
+                  onPressed: _addProduct,
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Add Product",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -395,9 +409,13 @@ class _NewProductPageState extends State<NewProductPage> {
   void _getImage() async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
-      setState(() {
-        imagePatch = pickedImage.path;
-      });
+      try {
+        final url =
+            await context.read<ProductProvider>().updateImage(pickedImage);
+        setState(() {
+          _imageUrl = url;
+        });
+      } catch (e) {}
     }
   }
 
@@ -415,5 +433,26 @@ class _NewProductPageState extends State<NewProductPage> {
     }
   }
 
-  void _addProduct() {}
+  void _addProduct() {
+    if (formKey.currentState!.validate()) {
+      final productModel = ProductModel(
+        name: productNameController.text,
+        category: _productCategory,
+        description: productDescriptionController.text,
+         imageUrl: _imageUrl,
+        salePrice: num.parse(productSalePriceController.text),
+      );
+
+      final purchaseModel = PurchaseModel(
+        dateModel: DateModel(
+          timestamp: Timestamp.now(),
+          day: DateTime.now().day,
+          month: DateTime.now().month,
+          year: DateTime.now().year,
+        ),
+        purchaseprice: num.parse(productPurchasePriceController.text),
+        quantity: num.parse(productQuantityController.text),
+      );
+    }
+  }
 }
