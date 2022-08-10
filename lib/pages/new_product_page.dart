@@ -2,9 +2,11 @@
 
 import 'dart:io';
 
+import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NewProductPage extends StatefulWidget {
   static const routeName = "new-product-page";
@@ -35,19 +37,10 @@ class _NewProductPageState extends State<NewProductPage> {
 
   String? _purchaseDate;
 
-  String bookCategory = 'OTHERS';
+  String? bookCategory;
   String? imagePatch;
 
   ImageSource source = ImageSource.camera;
-  var category_items = [
-    'LAPTOP',
-    'WATCH',
-    'DRESS',
-    'MOBILE',
-    'BIKE',
-    
-    'OTHERS',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -329,39 +322,43 @@ class _NewProductPageState extends State<NewProductPage> {
 
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                tileColor: Color(0xffe6e6e6),
-                leading: Text(
-                  "Select category:",
-                  textAlign: TextAlign.center,
+              child: Consumer<ProductProvider>(
+                builder: (context, provider,_)=>
+
+                 ListTile(
+                  tileColor: Color(0xffe6e6e6),
+                  leading: Text(
+                    "Select category:",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16),
+                  ),
+                  trailing: DropdownButton(
+                  borderRadius: BorderRadius.circular(20),
+                  underline: Text(""),
+                  dropdownColor: Colors.white,
+                  value: bookCategory,
+                  icon: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: const Icon(Icons.keyboard_arrow_down,color: Colors.red,),
+                  ),
                   style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16),
+                      color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
+                  items: provider.categorylist.map(( items) {
+                    return DropdownMenuItem(
+                      value: items.catName,
+                      child: Center(child: Text(items.catName.toString())),
+                    );
+                  }).toList(),
+                  onChanged: ( newValue) {
+                    setState(() {
+                      bookCategory = newValue.toString();
+                    });
+                  },
                 ),
-                trailing: DropdownButton(
-                borderRadius: BorderRadius.circular(20),
-                underline: Text(""),
-                dropdownColor: Colors.white,
-                value: bookCategory,
-                icon: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: const Icon(Icons.keyboard_arrow_down,color: Colors.red,),
                 ),
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontWeight: FontWeight.w500),
-                items: category_items.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Center(child: Text(items)),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    bookCategory = newValue!;
-                  });
-                },
-              ),
               ),
             ),
             SizedBox(height: 20,),

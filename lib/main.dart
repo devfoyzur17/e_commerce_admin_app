@@ -8,13 +8,19 @@ import 'package:e_commerce_admin_app/pages/products_page.dart';
 import 'package:e_commerce_admin_app/pages/report_page.dart';
 import 'package:e_commerce_admin_app/pages/setting_page.dart';
 import 'package:e_commerce_admin_app/pages/user_page.dart';
+import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_)=> ProductProvider()),
+    ],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
