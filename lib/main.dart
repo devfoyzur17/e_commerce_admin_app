@@ -17,11 +17,9 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_)=> ProductProvider()),
-    ],
-      child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => ProductProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -46,11 +44,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: appColor, 
+        primarySwatch: appColor,
       ),
       initialRoute: LauncherPage.routeName,
       routes: {
-
         LauncherPage.routeName: (context) => const LauncherPage(),
         DashboardPage.routeName: (context) => const DashboardPage(),
         LoginPage.routeName: (context) => const LoginPage(),

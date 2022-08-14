@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_admin_app/db/db_helper.dart';
 import 'package:e_commerce_admin_app/models/category_model.dart';
 import 'package:e_commerce_admin_app/models/purchase_model.dart';
@@ -10,7 +11,8 @@ import '../models/product_model.dart';
 
 class ProductProvider extends ChangeNotifier {
   List<ProductModel> productList = [];
-  List<CategoryModel> categorylist = [];
+  List<PurchaseModel> purchaseListOfSpecificProduct = [];
+  List<CategoryModel> categoryList = [];
 
   Future<void> addCategory(CategoryModel categoryModel) =>
       DBHelper.addNewCategory(categoryModel);
@@ -26,7 +28,7 @@ class ProductProvider extends ChangeNotifier {
 
   getAllCategories() {
     DBHelper.getAllCategories().listen((event) {
-      categorylist = List.generate(event.docs.length,
+      categoryList = List.generate(event.docs.length,
           (index) => CategoryModel.fromMap(event.docs[index].data()));
       notifyListeners();
     });
@@ -39,10 +41,28 @@ class ProductProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+  
+  getPurchaseByProductId(String id){
+    DBHelper.getPurchaseByProductId(id).listen((event) {
+      purchaseListOfSpecificProduct = List.generate(event.docs.length,
+              (index) => PurchaseModel.fromMap(event.docs[index].data()));
+      notifyListeners();
+    });
+  }
 
   CategoryModel getCategoryModelByCatName(String name) {
-    return categorylist.firstWhere((element) => element.catName == name);
+    return categoryList.firstWhere((element) => element.catName == name);
   }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getProductById(String id) =>
+      DBHelper.getProductById(id);
+
+Future<void> updateProduct(String id, String field, dynamic value){
+  return DBHelper.updateProduct(id, {
+    field : value
+  });
+}
+
 
   Future<String> updateImage(XFile xFile) async {
     final imageName = DateTime.now().microsecondsSinceEpoch.toString();

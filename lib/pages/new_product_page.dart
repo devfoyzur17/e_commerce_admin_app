@@ -371,7 +371,7 @@ class _NewProductPageState extends State<NewProductPage> {
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500),
-                      items: provider.categorylist.map((items) {
+                      items: provider.categoryList.map((items) {
                         return DropdownMenuItem(
                           value: items.catName,
                           child: Center(child: Text(items.catName.toString())),

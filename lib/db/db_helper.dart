@@ -3,8 +3,7 @@ import 'package:e_commerce_admin_app/models/category_model.dart';
 import 'package:e_commerce_admin_app/models/product_model.dart';
 import 'package:e_commerce_admin_app/models/purchase_model.dart';
 
-class DBHelper{
-
+class DBHelper {
   static String adminCollection = "Admins";
   static String collectionCategory = "Category";
   static String collectionProducts = "Products";
@@ -17,23 +16,23 @@ class DBHelper{
 
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  static Future<bool> isAdmin(String uid) async{
+  static Future<bool> isAdmin(String uid) async {
     final snapshot = await _db.collection(adminCollection).doc(uid).get();
     return snapshot.exists;
   }
 
-  static Future<void> addNewCategory(CategoryModel categoryModel){
+  static Future<void> addNewCategory(CategoryModel categoryModel) {
     final doc = _db.collection(collectionCategory).doc();
     categoryModel.catId = doc.id;
     return doc.set(categoryModel.toMap());
   }
 
   static Future<void> addProduct(
-      ProductModel productModel,
-      PurchaseModel purchaseModel,
-      String catId,
-      num count,
-      ){
+    ProductModel productModel,
+    PurchaseModel purchaseModel,
+    String catId,
+    num count,
+  ) {
     final wb = _db.batch();
     final proDoc = _db.collection(collectionProducts).doc();
     final purDoc = _db.collection(collectionPurchase).doc();
@@ -44,17 +43,29 @@ class DBHelper{
 
     wb.set(proDoc, productModel.toMap());
     wb.set(purDoc, purchaseModel.toMap());
-    wb.update(catDoc, {categoryProductCount : count});
+    wb.update(catDoc, {categoryProductCount: count});
 
     return wb.commit();
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories()=>
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories() =>
       _db.collection(collectionCategory).snapshots();
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts()=>
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() =>
       _db.collection(collectionProducts).snapshots();
 
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getProductById(
+          String id) =>
+      _db.collection(collectionProducts).doc(id).snapshots();
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getPurchaseByProductId(
+          String id) =>
+      _db
+          .collection(collectionPurchase)
+          .where(purchaseProductId, isEqualTo: id)
+          .snapshots();
 
+  static Future<void> updateProduct(String id, Map<String, dynamic> map) {
+    return _db.collection(collectionProducts).doc(id).update(map);
+  }
 }

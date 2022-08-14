@@ -1,4 +1,5 @@
 import 'package:e_commerce_admin_app/pages/product_details_page.dart';
+import 'package:e_commerce_admin_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,21 +20,15 @@ class ProductPage extends StatelessWidget {
 
       body: Consumer<ProductProvider>(
           builder: (context, provider, _) => provider.productList.isEmpty
-              ? Center(
-            child: Text("No product found"),
+              ? const Center(
+            child:Text("No product found"),
           )
-              : ListView.builder(
+              : GridView.builder(
+            padding:const EdgeInsets.only(left: 5,right: 5,top: 5),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
               itemCount: provider.productList.length,
-              itemBuilder: (context, index) {
-                final product = provider.productList[index];
-                return ListTile(
-                  onTap: (){
-                    Navigator.pushNamed(context, ProductDetailsPage.routeName, arguments: product);
-                  },
-                  title: Text(
-                      "${product.name} (${product.available})"),
-                );
-              })),
+              itemBuilder: (context, index) => ProductItem(product: provider.productList[index])),),
 
 
 

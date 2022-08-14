@@ -15,14 +15,14 @@ class CategoryPage extends StatelessWidget {
         title: const Text("Category"),
       ),
       body: Consumer<ProductProvider>(
-          builder: (context, provider, _) => provider.categorylist.isEmpty
+          builder: (context, provider, _) => provider.categoryList.isEmpty
               ? Center(
                   child: Text("No category found"),
                 )
               : ListView.builder(
-                  itemCount: provider.categorylist.length,
+                  itemCount: provider.categoryList.length,
                   itemBuilder: (context, index) {
-                    final category = provider.categorylist[index];
+                    final category = provider.categoryList[index];
                     return ListTile(
                       title: Text(
                           "${category.catName} (${category.categoryCount})"),
