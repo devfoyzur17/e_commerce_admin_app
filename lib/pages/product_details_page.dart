@@ -8,11 +8,14 @@ import '../providers/product_provider.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   static const routeName = "product-details-page";
-  const ProductDetailsPage({Key? key}) : super(key: key);
+    ProductDetailsPage({Key? key}) : super(key: key);
+  final txtContoller = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
     final pId = ModalRoute.of(context)!.settings.arguments as String;
+    Provider.of<ProductProvider>(context).getPurchaseByProductId(pId);
     return Scaffold(
       appBar: AppBar(
         title: Text("Product Details"),
@@ -26,25 +29,50 @@ class ProductDetailsPage extends StatelessWidget {
               final product = ProductModel.fromMap(snapshot.data!.data()!);
               return ListView(
                 children: [
-                  FadeInImage.assetNetwork(
-                    placeholder: 'images/placeholder.jpg',
-                    image: product.imageUrl!,
-                    fadeInCurve: Curves.bounceInOut,
-                    fadeInDuration: const Duration(seconds: 3),
-                    width: double.infinity,
-                    height: 300,
-                    fit: BoxFit.cover,
+                  Container(
+                    color: Colors.white,
+                    child: FadeInImage.assetNetwork(
+                      placeholder: 'images/placeholder.jpg',
+                      image: product.imageUrl!,
+                      fadeInCurve: Curves.bounceInOut,
+                      fadeInDuration: const Duration(seconds: 3),
+                      width: double.infinity,
+                      height: 300,
+
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+
                     children: [
-                      TextButton(
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+
+                            borderRadius:  BorderRadius.circular(15),
+
+                          ),
+                          side: BorderSide(
+                            color: Theme.of(context).primaryColor
+                          )
+                        ),
                         onPressed: () {},
                         child: const Text('Re-Purchase'),
                       ),
-                      TextButton(
+                     SizedBox(width: 20,),
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+
+                              borderRadius:  BorderRadius.circular(15),
+
+                            ),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor
+                            )
+                        ),
                         onPressed: () {
-                           provider.getPurchaseByProductId(pId);
                           _showPurchaseHistoryBottomSheet(context);
                         },
                         child: const Text('Purchase History'),
@@ -54,14 +82,29 @@ class ProductDetailsPage extends StatelessWidget {
                   ListTile(
                     title: Text(product.name!),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                         showUpdateDialog(context, "Name", product.name, (value) {
+
+                           provider.updateProduct(product.id!, productName, value);
+
+                         });
+
+
+                      },
                       icon: const Icon(Icons.edit),
                     ),
                   ),
                   ListTile(
-                    title: Text('৳${product.salePrice}'),
+                    title: Text('৳${product.salePrice.toString()}'),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showUpdateDialog(context, "Price", product.salePrice.toString(), (value) {
+
+                         provider.updateProduct(product.id!, productSalePrice, num.parse(value));
+
+                        });
+
+                      },
                       icon: const Icon(Icons.edit),
                     ),
                   ),
@@ -69,7 +112,14 @@ class ProductDetailsPage extends StatelessWidget {
                     title: const Text('Product Description'),
                     subtitle: Text(product.description ?? 'Not Available'),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showUpdateDialog(context, "Description", product.description, (value) {
+
+                          provider.updateProduct(product.id!, productDescription, value);
+
+                        });
+
+                      },
                       icon: const Icon(Icons.edit),
                     ),
                   ),
@@ -120,5 +170,54 @@ class ProductDetailsPage extends StatelessWidget {
       }
   ));
 
+  }
+
+
+  showUpdateDialog(BuildContext context,String title, String? value, Function(String) onSaved) {
+    txtContoller.text = value ?? "";
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Update $title",textAlign: TextAlign.center,),
+          content: TextFormField(
+            controller: txtContoller,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w500),
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xffe6e6e6),
+                contentPadding: const EdgeInsets.only(left: 10),
+                focusColor: Colors.white,
+                prefixIcon: const Icon(
+                  Icons.workspaces_filled,
+                ),
+                hintText: "Enter $title",
+                hintStyle: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.normal),
+                border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(20))),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'This field must not be empty';
+              } else {
+                return null;
+              }
+            },
+          ),
+
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text("Cancel")),
+            TextButton(
+                onPressed: () {
+                  onSaved(txtContoller.text);
+                  Navigator.pop(context);
+                },
+                child: Text("Update"))
+          ],
+        ));
   }
 }

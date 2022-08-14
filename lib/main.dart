@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         ReportPage.routeName: (context) => const ReportPage(),
         SettingPage.routeName: (context) => const SettingPage(),
         UserPage.routeName: (context) => const UserPage(),
-        ProductDetailsPage.routeName: (context) => const ProductDetailsPage(),
+        ProductDetailsPage.routeName: (context) =>  ProductDetailsPage(),
       },
     );
   }
