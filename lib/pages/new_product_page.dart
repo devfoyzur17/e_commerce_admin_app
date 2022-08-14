@@ -12,6 +12,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/helper_function.dart';
+
 class NewProductPage extends StatefulWidget {
   static const routeName = "new-product-page";
   const NewProductPage({Key? key}) : super(key: key);
@@ -39,9 +41,10 @@ class _NewProductPageState extends State<NewProductPage> {
     super.dispose();
   }
 
-  String? _purchaseDate;
+  DateTime? _purchaseDate;
 
   String? _productCategory;
+  bool _isUploadding=false;
   String? _imageUrl;
 
   ImageSource source = ImageSource.camera;
@@ -314,7 +317,7 @@ class _NewProductPageState extends State<NewProductPage> {
                     child: Text(
                       _purchaseDate == null
                           ? "No date choisen!"
-                          : _purchaseDate.toString(),
+                          : getFormatedDateTime(_purchaseDate!, "dd/MM/yyyy"),
                       style: TextStyle(
                           color: _purchaseDate == null
                               ? Colors.grey
@@ -387,7 +390,7 @@ class _NewProductPageState extends State<NewProductPage> {
                 height: 20,
               ),
 
-              ElevatedButton(
+         _isUploadding? CircularProgressIndicator():     ElevatedButton(
                   onPressed: _addProduct,
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -409,11 +412,17 @@ class _NewProductPageState extends State<NewProductPage> {
   void _getImage() async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
+      setState((){
+
+        _isUploadding = true;
+      });
       try {
         final url =
             await context.read<ProductProvider>().updateImage(pickedImage);
+
         setState(() {
           _imageUrl = url;
+          _isUploadding = false;
         });
       } catch (e) {}
     }
@@ -428,7 +437,7 @@ class _NewProductPageState extends State<NewProductPage> {
 
     if (selectedDate != null) {
       setState(() {
-        _purchaseDate = DateFormat("yyy/MM/dd").format(selectedDate);
+        _purchaseDate = selectedDate;
       });
     }
   }
@@ -439,20 +448,42 @@ class _NewProductPageState extends State<NewProductPage> {
         name: productNameController.text,
         category: _productCategory,
         description: productDescriptionController.text,
-         imageUrl: _imageUrl,
+        imageUrl: _imageUrl,
         salePrice: num.parse(productSalePriceController.text),
       );
 
       final purchaseModel = PurchaseModel(
         dateModel: DateModel(
-          timestamp: Timestamp.now(),
-          day: DateTime.now().day,
-          month: DateTime.now().month,
-          year: DateTime.now().year,
+          timestamp: Timestamp.fromDate(_purchaseDate!),
+          day: _purchaseDate!.day,
+          month: _purchaseDate!.month,
+          year: _purchaseDate!.year,
         ),
         purchaseprice: num.parse(productPurchasePriceController.text),
         quantity: num.parse(productQuantityController.text),
       );
+
+      final catModel = context.read<ProductProvider>().getCategoryModelByCatName(_productCategory!);
+      context.read<ProductProvider>().addNewProduct(productModel, purchaseModel, catModel).then((value) {
+        _resetFields();
+      }).catchError((onError){
+        showMsg(context, onError);
+
+      });
+
     }
+  }
+  void _resetFields(){
+    setState((){
+      productNameController.clear();
+      productDescriptionController.clear();
+      productQuantityController.clear();
+      productPurchasePriceController.clear();
+      productSalePriceController.clear();
+      _imageUrl = null;
+      _productCategory = null;
+      _purchaseDate = null;
+
+    });
   }
 }

@@ -19,6 +19,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Provider.of<ProductProvider>(context,listen: false).getAllCategories();
+    Provider.of<ProductProvider>(context,listen: false).getAllProducts();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dashboard"),
@@ -33,7 +34,6 @@ class DashboardPage extends StatelessWidget {
             itemCount: dashboardItems.length,
             itemBuilder: (context, index) => DashBoardItemView(
                 dashboardIteam: dashboardItems[index], onPressed: (value) {
-
 
                 String route =   navigator(value);
                 Navigator.pushNamed(context, route);
