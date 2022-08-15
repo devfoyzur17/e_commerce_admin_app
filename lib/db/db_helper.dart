@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_admin_app/models/category_model.dart';
+import 'package:e_commerce_admin_app/models/order_constants_model.dart';
 import 'package:e_commerce_admin_app/models/product_model.dart';
 import 'package:e_commerce_admin_app/models/purchase_model.dart';
 
@@ -11,8 +12,8 @@ class DBHelper {
   static String collectionUsers = "User";
   static String collectionOrder = "Order";
   static String collectionOrderDetails = "OrderDetails";
-  static String collectionSettings = "Setting";
-  static String documentConstant = "OrderConstant";
+  static String collectionOrderSettings = "Setting";
+  static String documentOrderConstant = "OrderConstant";
 
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
@@ -27,10 +28,18 @@ class DBHelper {
     return doc.set(categoryModel.toMap());
   }
 
-  static Future<void> rePurchase(PurchaseModel purchaseModel){
+  static Future<void> addOrderConstants(OrderConstantsModel orderConstantsModel)=>
+    _db.collection(collectionOrderSettings).doc(documentOrderConstant).set(orderConstantsModel.toMap());
+
+
+  static Future<void> rePurchase(PurchaseModel purchaseModel, CategoryModel catModel){
+    final wb = _db.batch();
     final doc = _db.collection(collectionPurchase).doc();
     purchaseModel.id = doc.id;
-    return doc.set(purchaseModel.toMap());
+    wb.set(doc, purchaseModel.toMap());
+    final catDoc = _db.collection(collectionCategory).doc(catModel.catId);
+    wb.update(catDoc, {categoryProductCount : catModel.categoryCount});
+    return wb.commit();
 
   }
 
@@ -61,6 +70,9 @@ class DBHelper {
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() =>
       _db.collection(collectionProducts).snapshots();
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getAllOrderConstants() =>
+      _db.collection(collectionOrderSettings).doc(documentOrderConstant).snapshots();
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> getProductById(
           String id) =>

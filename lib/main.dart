@@ -9,6 +9,7 @@ import 'package:e_commerce_admin_app/pages/products_page.dart';
 import 'package:e_commerce_admin_app/pages/report_page.dart';
 import 'package:e_commerce_admin_app/pages/setting_page.dart';
 import 'package:e_commerce_admin_app/pages/user_page.dart';
+import 'package:e_commerce_admin_app/providers/order_provider.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => ProductProvider()),
+    ChangeNotifierProvider(create: (_) => OrderProvider()),
   ], child: const MyApp()));
 }
 
