@@ -27,6 +27,13 @@ class DBHelper {
     return doc.set(categoryModel.toMap());
   }
 
+  static Future<void> rePurchase(PurchaseModel purchaseModel){
+    final doc = _db.collection(collectionPurchase).doc();
+    purchaseModel.id = doc.id;
+    return doc.set(purchaseModel.toMap());
+
+  }
+
   static Future<void> addProduct(
     ProductModel productModel,
     PurchaseModel purchaseModel,
@@ -47,6 +54,7 @@ class DBHelper {
 
     return wb.commit();
   }
+
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories() =>
       _db.collection(collectionCategory).snapshots();

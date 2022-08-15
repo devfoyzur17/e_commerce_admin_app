@@ -2,7 +2,7 @@ import 'package:e_commerce_admin_app/models/dashboard_item_model.dart';
 import 'package:flutter/material.dart';
 
 class DashBoardItemView extends StatelessWidget {
-  final DashboardIteamModel dashboardIteam;
+  final DashboardItemModel dashboardIteam;
   final Function(String) onPressed;
   const DashBoardItemView({
     Key? key,

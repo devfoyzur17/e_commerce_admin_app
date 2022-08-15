@@ -28,18 +28,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<int, Color> pokeballRedSwatch = {
-      50: const Color.fromARGB(255, 17, 156, 105),
-      100: const Color.fromARGB(255, 17, 156, 105),
-      200: const Color.fromARGB(255, 17, 156, 105),
-      300: const Color.fromARGB(255, 17, 156, 105),
-      400: const Color.fromARGB(255, 17, 156, 105),
-      500: const Color.fromARGB(255, 17, 156, 105),
-      600: const Color.fromARGB(255, 17, 156, 105),
-      700: const Color.fromARGB(255, 17, 156, 105),
-      800: const Color.fromARGB(255, 17, 156, 105),
-      900: const Color.fromARGB(255, 17, 156, 105),
+      50: const Color.fromARGB(255, 230, 66, 25),
+      100: const Color.fromARGB(255, 230, 66, 25),
+      200: const Color.fromARGB(255, 230, 66, 25),
+      300: const Color.fromARGB(255, 230, 66, 25),
+      400: const Color.fromARGB(255, 230, 66, 25),
+      500: const Color.fromARGB(255, 230, 66, 25),
+      600: const Color.fromARGB(255, 230, 66, 25),
+      700: const Color.fromARGB(255, 230, 66, 25),
+      800: const Color.fromARGB(255, 230, 66, 25),
+      900: const Color.fromARGB(255, 230, 66, 25),
     };
-    MaterialColor appColor = MaterialColor(0xff119c69, pokeballRedSwatch);
+    MaterialColor appColor = MaterialColor(0xffe64219, pokeballRedSwatch);
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,

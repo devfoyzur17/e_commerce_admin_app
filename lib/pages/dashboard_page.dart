@@ -51,22 +51,22 @@ class DashboardPage extends StatelessWidget {
   String navigator(String value) {
     String route ="";
     switch(value){
-      case DashboardIteamModel.user:
+      case DashboardItemModel.user:
         route = UserPage.routeName;
         break;
-      case DashboardIteamModel.settings:
+      case DashboardItemModel.settings:
         route = SettingPage.routeName;
         break;
-      case DashboardIteamModel.category:
+      case DashboardItemModel.category:
         route = CategoryPage.routeName;
         break;
-      case DashboardIteamModel.order:
+      case DashboardItemModel.order:
         route = OrderPage.routeName;
         break;
-      case DashboardIteamModel.report:
+      case DashboardItemModel.report:
         route = ReportPage.routeName;
         break;
-      case DashboardIteamModel.product:
+      case DashboardItemModel.product:
         route = ProductPage.routeName;
         break;
 

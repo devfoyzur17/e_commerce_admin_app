@@ -1,8 +1,6 @@
-import 'package:e_commerce_admin_app/pages/product_details_page.dart';
 import 'package:e_commerce_admin_app/widgets/product_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/product_provider.dart';
 import 'new_product_page.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class DashboardIteamModel {
+class DashboardItemModel {
   IconData icon;
   String title;
 
-  DashboardIteamModel({
+  DashboardItemModel({
     required this.icon,
     required this.title,
   });
@@ -17,29 +17,29 @@ class DashboardIteamModel {
   static const String report = "Report";
 }
 
-final List<DashboardIteamModel> dashboardItems = [
-  DashboardIteamModel(
+final List<DashboardItemModel> dashboardItems = [
+  DashboardItemModel(
     icon: Icons.card_giftcard,
-    title: DashboardIteamModel.product,
+    title: DashboardItemModel.product,
   ),
-  DashboardIteamModel(
+  DashboardItemModel(
     icon: Icons.category,
-    title: DashboardIteamModel.category,
+    title: DashboardItemModel.category,
   ),
-  DashboardIteamModel(
+  DashboardItemModel(
     icon: Icons.monetization_on,
-    title: DashboardIteamModel.order,
+    title: DashboardItemModel.order,
   ),
-  DashboardIteamModel(
+  DashboardItemModel(
     icon: Icons.person,
-    title: DashboardIteamModel.user,
+    title: DashboardItemModel.user,
   ),
-  DashboardIteamModel(
+  DashboardItemModel(
     icon: Icons.settings,
-    title: DashboardIteamModel.settings,
+    title: DashboardItemModel.settings,
   ),
-  DashboardIteamModel(
+  DashboardItemModel(
     icon: Icons.area_chart,
-    title: DashboardIteamModel.report,
+    title: DashboardItemModel.report,
   ),
 ];
