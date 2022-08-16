@@ -9,7 +9,6 @@ import 'package:e_commerce_admin_app/models/purchase_model.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/helper_function.dart';

@@ -1,5 +1,7 @@
+import 'package:e_commerce_admin_app/models/order_constants_model.dart';
 import 'package:e_commerce_admin_app/providers/order_provider.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
+import 'package:e_commerce_admin_app/utils/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ class _SettingPageState extends State<SettingPage> {
   double discountSliderValue = 0;
   double vatSliderValue = 0;
   bool needUpdate = false;
+
   @override
   void didChangeDependencies() {
     productProvider = Provider.of<ProductProvider>(context, listen: false);
@@ -63,7 +66,9 @@ class _SettingPageState extends State<SettingPage> {
                       },
                     ),
                   ),
+
                   Divider(),
+
                   ListTile(
                     title: Text("Discount"),
                     trailing: Text("${discountSliderValue.round()}%"),
@@ -108,6 +113,18 @@ class _SettingPageState extends State<SettingPage> {
                         side: BorderSide(
                             color: needUpdate? Theme.of(context).primaryColor: Colors.grey)),
                     onPressed: needUpdate ? () {
+
+                      final model = OrderConstantsModel(
+                        deliveryCharge: deliveryChargeSliderValue,
+                        discount: discountSliderValue,
+                         vat: vatSliderValue,
+                      );
+                      orderProvider.addOrderConstants(model).then((value) {
+                        showMsg(context, 'Updated');
+                        setState((){
+                          needUpdate = false;
+                        });
+                      });
 
                     }:null,
                     child: const Text(' Update '),

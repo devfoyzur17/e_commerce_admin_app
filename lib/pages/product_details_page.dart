@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_admin_app/models/product_model.dart';
-import 'package:e_commerce_admin_app/utils/helper_function.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/product_provider.dart';
+import '../utils/helper_function.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   static const routeName = "product-details-page";
@@ -14,13 +14,12 @@ class ProductDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final pId = ModalRoute.of(context)!.settings.arguments as String;
     Provider.of<ProductProvider>(context).getPurchaseByProductId(pId);
+   final provider =   Provider.of<ProductProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text("Product Details"),
       ),
-      body: Consumer<ProductProvider>(
-        builder: (context, provider, _) =>
-            StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      body:  StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           stream: provider.getProductById(pId),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -152,7 +151,7 @@ class ProductDetailsPage extends StatelessWidget {
             );
           },
         ),
-      ),
+
     );
   }
 
