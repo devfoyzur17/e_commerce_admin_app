@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Form(
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
 
                   const Text(
-                    "Login",
+                    "Admin Login",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 22,
@@ -53,9 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                     height: 20,
                   ),
                   Image.asset(
-                    "assets/images/person.png",
-                    height: 100,
-                    width: 100,
+                    "assets/images/login.jpg",
+                    height: 230,
+                    width: double.infinity,
                     fit: BoxFit.fitHeight,
                   ),
                   SizedBox(

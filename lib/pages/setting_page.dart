@@ -25,10 +25,14 @@ class _SettingPageState extends State<SettingPage> {
   void didChangeDependencies() {
     productProvider = Provider.of<ProductProvider>(context, listen: false);
     orderProvider = Provider.of<OrderProvider>(context, listen: false);
-    orderProvider.getOrderConstants();
-    deliveryChargeSliderValue = orderProvider.orderConstantsModel.deliveryCharge.toDouble();
-    discountSliderValue = orderProvider.orderConstantsModel.discount.toDouble();
-    vatSliderValue = orderProvider.orderConstantsModel.vat.toDouble();
+    orderProvider.getOrderConstants().then((value) {
+      setState(() {
+        deliveryChargeSliderValue = orderProvider.orderConstantsModel.deliveryCharge.toDouble();
+        discountSliderValue = orderProvider.orderConstantsModel.discount.toDouble();
+        vatSliderValue = orderProvider.orderConstantsModel.vat.toDouble();
+      });
+    });
+
 
     super.didChangeDependencies();
   }
@@ -51,7 +55,11 @@ class _SettingPageState extends State<SettingPage> {
                 children: [
                   ListTile(
                     title: Text("Delivery Charge"),
-                    trailing: Text("৳${deliveryChargeSliderValue.round()}"),
+                    trailing: Container(
+                      width: 35,
+                        child: Container(
+                          width: 35,
+                            child: Text("৳${deliveryChargeSliderValue.round()}"))),
                     subtitle: Slider(
                       value: deliveryChargeSliderValue.toDouble(),
                       min: 0,
@@ -71,7 +79,9 @@ class _SettingPageState extends State<SettingPage> {
 
                   ListTile(
                     title: Text("Discount"),
-                    trailing: Text("${discountSliderValue.round()}%"),
+                    trailing: Container(
+                      width: 35,
+                        child: Text("${discountSliderValue.round()}%")),
                     subtitle: Slider(
                       value: discountSliderValue.toDouble(),
                       min: 0,
@@ -89,7 +99,9 @@ class _SettingPageState extends State<SettingPage> {
                   Divider(),
                   ListTile(
                     title: Text("Vat"),
-                    trailing: Text("৳${vatSliderValue.round()}"),
+                    trailing: Container(
+                      width: 35,
+                        child: Text("৳${vatSliderValue.round()}")),
                     subtitle: Slider(
                       value: vatSliderValue.toDouble(),
                       min: 0,

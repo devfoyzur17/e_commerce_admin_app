@@ -71,8 +71,8 @@ class DBHelper {
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() =>
       _db.collection(collectionProducts).snapshots();
 
-  static Stream<DocumentSnapshot<Map<String, dynamic>>> getAllOrderConstants() =>
-      _db.collection(collectionOrderSettings).doc(documentOrderConstant).snapshots();
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getAllOrderConstants() =>
+      _db.collection(collectionOrderSettings).doc(documentOrderConstant).get();
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> getProductById(
           String id) =>
