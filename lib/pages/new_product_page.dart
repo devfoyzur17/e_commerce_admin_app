@@ -7,6 +7,7 @@ import 'package:e_commerce_admin_app/models/date_model.dart';
 import 'package:e_commerce_admin_app/models/product_model.dart';
 import 'package:e_commerce_admin_app/models/purchase_model.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
+import 'package:e_commerce_admin_app/widgets/show_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -389,7 +390,7 @@ class _NewProductPageState extends State<NewProductPage> {
                 height: 20,
               ),
 
-         _isUploadding? CircularProgressIndicator():     ElevatedButton(
+         _isUploadding? ShowLoading():     ElevatedButton(
                   onPressed: _addProduct,
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(

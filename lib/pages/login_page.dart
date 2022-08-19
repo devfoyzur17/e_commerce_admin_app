@@ -2,6 +2,7 @@
 
 import 'package:e_commerce_admin_app/auth/auth_service.dart';
 import 'package:e_commerce_admin_app/pages/launcher_page.dart';
+import 'package:e_commerce_admin_app/widgets/show_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
     super.dispose();
   }
+  bool _isLoading = false;
 
   bool _isObscure = true;
   @override
@@ -145,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: Text(
                             "forget password?",
                           ))),
-                  Padding(
+                _isLoading? ShowLoading():  Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       _errorMessage,
@@ -177,6 +179,9 @@ class _LoginPageState extends State<LoginPage> {
 
   void _chechValidet() async {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
       try {
 
        final status =   await AuthService.login(emailController.text, passwordController.text);
@@ -187,6 +192,9 @@ class _LoginPageState extends State<LoginPage> {
        }
        else{
          AuthService.logout();
+         setState(() {
+           _isLoading = false;
+         });
          _errorMessage = "You are not admin";
        }
 
@@ -194,6 +202,9 @@ class _LoginPageState extends State<LoginPage> {
 
       } on FirebaseAuthException catch (e) {
         setState(() {
+          setState(() {
+            _isLoading = false;
+          });
           _errorMessage = e.message!;
         });
       }
