@@ -6,6 +6,7 @@ import 'package:e_commerce_admin_app/pages/products_page.dart';
 import 'package:e_commerce_admin_app/pages/report_page.dart';
 import 'package:e_commerce_admin_app/pages/setting_page.dart';
 import 'package:e_commerce_admin_app/pages/user_page.dart';
+import 'package:e_commerce_admin_app/providers/order_provider.dart';
 import 'package:e_commerce_admin_app/providers/product_provider.dart';
 import 'package:e_commerce_admin_app/widgets/dashboard_item_view.dart';
 import 'package:e_commerce_admin_app/widgets/main_drawer.dart';
@@ -20,6 +21,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Provider.of<ProductProvider>(context,listen: false).getAllCategories();
     Provider.of<ProductProvider>(context,listen: false).getAllProducts();
+    Provider.of<OrderProvider>(context,listen: false).getAllOrders();
 
     return Scaffold(
       appBar: AppBar(

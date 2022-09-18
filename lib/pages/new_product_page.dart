@@ -450,6 +450,7 @@ class _NewProductPageState extends State<NewProductPage> {
         description: productDescriptionController.text,
         imageUrl: _imageUrl,
         salePrice: num.parse(productSalePriceController.text),
+        stock: num.parse(productQuantityController.text)
       );
 
       final purchaseModel = PurchaseModel(

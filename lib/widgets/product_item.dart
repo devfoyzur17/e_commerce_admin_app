@@ -34,7 +34,7 @@ class ProductItem extends StatelessWidget {
                 product.name.toString(),
                 style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
               ),
-              Text("৳${product.salePrice}", style: TextStyle(color: Colors.red),)
+              Text("Stock: ${product.stock}", style: TextStyle(color: Colors.red),)
             ],
           ),
         ),

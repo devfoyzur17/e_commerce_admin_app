@@ -28,19 +28,25 @@ class DBHelper {
     return doc.set(categoryModel.toMap());
   }
 
-  static Future<void> addOrderConstants(OrderConstantsModel orderConstantsModel)=>
-    _db.collection(collectionOrderSettings).doc(documentOrderConstant).set(orderConstantsModel.toMap());
+  static Future<void> addOrderConstants(
+          OrderConstantsModel orderConstantsModel) =>
+      _db
+          .collection(collectionOrderSettings)
+          .doc(documentOrderConstant)
+          .set(orderConstantsModel.toMap());
 
-
-  static Future<void> rePurchase(PurchaseModel purchaseModel, CategoryModel catModel){
+  static Future<void> rePurchase(
+      PurchaseModel purchaseModel, CategoryModel catModel, num stock) {
     final wb = _db.batch();
     final doc = _db.collection(collectionPurchase).doc();
     purchaseModel.id = doc.id;
     wb.set(doc, purchaseModel.toMap());
     final catDoc = _db.collection(collectionCategory).doc(catModel.catId);
-    wb.update(catDoc, {categoryProductCount : catModel.categoryCount});
+    wb.update(catDoc, {categoryProductCount: catModel.categoryCount});
+    final proDoc =
+        _db.collection(collectionProducts).doc(purchaseModel.productID);
+    wb.update(proDoc, {productStock: (stock + purchaseModel.quantity)});
     return wb.commit();
-
   }
 
   static Future<void> addProduct(
@@ -64,15 +70,17 @@ class DBHelper {
     return wb.commit();
   }
 
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllCategories() =>
       _db.collection(collectionCategory).snapshots();
 
   static Stream<QuerySnapshot<Map<String, dynamic>>> getAllProducts() =>
       _db.collection(collectionProducts).snapshots();
 
-  static Future<DocumentSnapshot<Map<String, dynamic>>> getAllOrderConstants() =>
-      _db.collection(collectionOrderSettings).doc(documentOrderConstant).get();
+  static Future<DocumentSnapshot<Map<String, dynamic>>>
+      getAllOrderConstants() => _db
+          .collection(collectionOrderSettings)
+          .doc(documentOrderConstant)
+          .get();
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>> getProductById(
           String id) =>
@@ -87,5 +95,9 @@ class DBHelper {
 
   static Future<void> updateProduct(String id, Map<String, dynamic> map) {
     return _db.collection(collectionProducts).doc(id).update(map);
+  }
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllOrders() {
+    return _db.collection(collectionOrder).snapshots();
   }
 }
