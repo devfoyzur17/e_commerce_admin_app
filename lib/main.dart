@@ -3,6 +3,7 @@ import 'package:e_commerce_admin_app/pages/dashboard_page.dart';
 import 'package:e_commerce_admin_app/pages/launcher_page.dart';
 import 'package:e_commerce_admin_app/pages/login_page.dart';
 import 'package:e_commerce_admin_app/pages/new_product_page.dart';
+import 'package:e_commerce_admin_app/pages/orderListPage.dart';
 import 'package:e_commerce_admin_app/pages/order_page.dart';
 import 'package:e_commerce_admin_app/pages/product_details_page.dart';
 import 'package:e_commerce_admin_app/pages/products_page.dart';
@@ -58,11 +59,12 @@ class MyApp extends StatelessWidget {
         CategoryPage.routeName: (context) => const CategoryPage(),
         NewProductPage.routeName: (context) => const NewProductPage(),
         OrderPage.routeName: (context) => const OrderPage(),
+        OrderListPage.routeName: (context) => const OrderListPage(),
         ProductPage.routeName: (context) => const ProductPage(),
         ReportPage.routeName: (context) => const ReportPage(),
         SettingPage.routeName: (context) => const SettingPage(),
         UserPage.routeName: (context) => const UserPage(),
-        ProductDetailsPage.routeName: (context) =>  ProductDetailsPage(),
+        ProductDetailsPage.routeName: (context) => ProductDetailsPage(),
       },
     );
   }

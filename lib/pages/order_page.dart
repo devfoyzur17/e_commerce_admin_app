@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_commerce_admin_app/pages/orderListPage.dart';
 import 'package:e_commerce_admin_app/providers/order_provider.dart';
+import 'package:e_commerce_admin_app/utils/contstants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -67,7 +69,11 @@ class OrderPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {}, child: Text("View All"))
+                    TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, OrderListPage.routeName,
+                            arguments: OrderFilter.TODAY),
+                        child: Text("View All"))
                   ],
                 ),
               ),
@@ -125,7 +131,11 @@ class OrderPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {}, child: Text("View All"))
+                    TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, OrderListPage.routeName,
+                            arguments: OrderFilter.YESTERDAY),
+                        child: Text("View All"))
                   ],
                 ),
               ),
@@ -183,7 +193,11 @@ class OrderPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {}, child: Text("View All"))
+                    TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, OrderListPage.routeName,
+                            arguments: OrderFilter.SEVEN_DAYS),
+                        child: Text("View All"))
                   ],
                 ),
               ),
@@ -226,7 +240,7 @@ class OrderPage extends StatelessWidget {
                               height: 3,
                             ),
                             Text(
-                                "${provider.getTotalOrderByDateRange(DateTime(DateTime.now().year, DateTime.now().month-1))}"),
+                                "${provider.getTotalOrderByDateRange(DateTime(DateTime.now().year, DateTime.now().month - 1))}"),
                           ],
                         ),
                         Column(
@@ -236,12 +250,16 @@ class OrderPage extends StatelessWidget {
                               height: 3,
                             ),
                             Text(
-                                "\৳${provider.getTotalSaleByDateRange(DateTime(DateTime.now().year, DateTime.now().month-1))}"),
+                                "\৳${provider.getTotalSaleByDateRange(DateTime(DateTime.now().year, DateTime.now().month - 1))}"),
                           ],
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {}, child: Text("View All"))
+                    TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, OrderListPage.routeName,
+                            arguments: OrderFilter.THIS_MONTH),
+                        child: Text("View All"))
                   ],
                 ),
               ),
@@ -283,8 +301,7 @@ class OrderPage extends StatelessWidget {
                             SizedBox(
                               height: 3,
                             ),
-                            Text(
-                                "${provider.orderList.length}"),
+                            Text("${provider.orderList.length}"),
                           ],
                         ),
                         Column(
@@ -293,13 +310,16 @@ class OrderPage extends StatelessWidget {
                             SizedBox(
                               height: 3,
                             ),
-                            Text(
-                                "\৳${provider.getAllTimeTotalSale()}"),
+                            Text("\৳${provider.getAllTimeTotalSale()}"),
                           ],
                         ),
                       ],
                     ),
-                    TextButton(onPressed: () {}, child: Text("View All"))
+                    TextButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, OrderListPage.routeName,
+                            arguments: OrderFilter.ALL_TIME),
+                        child: Text("View All"))
                   ],
                 ),
               ),
@@ -307,8 +327,6 @@ class OrderPage extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-
-
           ],
         ),
       ),
